@@ -10,9 +10,18 @@
  *
  * Learn more at https://developers.cloudflare.com/workers/
  */
+import { Ai } from '@cloudflare/ai'
+import { Hono } from 'hono';
 
-export default {
-	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		return new Response('Hello World!');
-	},
-};
+export type Env = {
+	AI: any;
+}
+
+const app = new Hono<{ Bindings: Env }>();
+
+app.get("/", async c => {
+	const ai = new Ai(c.env.AI)
+	return c.json({ message: "Hello World!" });
+})
+
+export default app;
